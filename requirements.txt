@@ -1,2 +1,5 @@
+numpy
+torch
+torchsummary
 matplotlib
 requests
