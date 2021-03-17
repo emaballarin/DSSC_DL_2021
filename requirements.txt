@@ -3,4 +3,5 @@ torch
 torchsummary
 matplotlib
 requests
+torchinfo
 ebtorch
