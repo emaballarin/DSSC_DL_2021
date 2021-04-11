@@ -3,5 +3,6 @@ torch
 torchsummary
 matplotlib
 requests
+opencv-python
 torchinfo
 ebtorch
