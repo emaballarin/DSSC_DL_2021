@@ -1,4 +1,3 @@
-from typing import List, Union
 from torch import nn, Tensor
 import torch.nn.functional as F
 
@@ -23,8 +22,8 @@ class MLP(nn.Module):
             nn.Linear(24, 10),
         )
 
-    def forward(self, X):
-        return self.layers(X)
+    def forward(self, xin):
+        return self.layers(xin)
 
 
 # Parameterized SoftMax Classifier (logistic regression as a NN)
@@ -42,30 +41,43 @@ class SMC(nn.Module):
 # Fully-Connected Block
 # Use ebtorch instead!
 
+
 class MLPCustom(nn.Module):
-    def __init__(self, layers_list:list, flatten_input=True):
+    def __init__(self, layers_list: list, flatten_input=True):
         super().__init__()
         layers = self._build_layers(layers_list)
         if flatten_input:
             layers.insert(0, nn.Flatten())
         self.layers = nn.Sequential(*layers)
 
-    def _build_layers(self, layers_list:list):
+    def _build_layers(self, layers_list: list):
         layers = []
         prev_in = None
         for i, l_dict in enumerate(layers_list):
             if not isinstance(l_dict, dict):
-                raise RuntimeError(f"layers_list must be a list of dicts. Entry {i}, found {type(l_dict)}")
+                raise RuntimeError(
+                    f"layers_list must be a list of dicts. Entry {i}, found {type(l_dict)}"
+                )
             if "n_in" not in l_dict.keys():
-                if i==0:
-                    raise RuntimeError(f"n_in must be specified inside the dict of the first item of layers_list")
+                if i == 0:
+                    raise RuntimeError(
+                        "n_in must be specified inside the dict of the first item of layers_list"
+                    )
                 l_dict["n_in"] = prev_in
-            
+
             layers.extend(self._build_single_layer(**l_dict))
             prev_in = l_dict["n_out"]
         return layers
 
-    def _build_single_layer(self, n_in:int, n_out:int, activ=nn.ReLU, batchnorm=True, dropout_p=None, bias=True):
+    def _build_single_layer(
+        self,
+        n_in: int,
+        n_out: int,
+        activ=nn.ReLU,
+        batchnorm=True,
+        dropout_p=None,
+        bias=True,
+    ):
         layers = []
         if batchnorm:
             layers.append(nn.BatchNorm1d(n_in))
@@ -75,6 +87,6 @@ class MLPCustom(nn.Module):
         if dropout_p is not None and (dropout_p > 0.0 and dropout_p < 1.0):
             layers.append(nn.Dropout(p=dropout_p))
         return layers
-    
-    def forward(self, X:Tensor):
-        return self.layers(X)
+
+    def forward(self, xin: Tensor):
+        return self.layers(xin)
