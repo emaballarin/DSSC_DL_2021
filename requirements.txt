@@ -4,5 +4,8 @@ torchsummary
 matplotlib
 requests
 opencv-python
+timm
+git+git://github.com/scardine/image_size
+Pillow
 torchinfo
 ebtorch
