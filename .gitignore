@@ -4,6 +4,7 @@
 datasets/
 models/
 **/.ipynb_checkpoints/
+generated_images/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
